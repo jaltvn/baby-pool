@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Pool — Due November</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--teal-deep:#16333A;--teal-mid:#1F454E;--fog:#A9BEC4;--amber:#E4A94A;--cedar:#9A4E3C;--paper:#F3ECDF;--ink:#152220;--good:#4C8B5C;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--teal-deep);color:var(--paper);font-family:'Source Serif 4',serif;-webkit-font-smoothing:antialiased;}
+  .display{font-family:'Bebas Neue',sans-serif;letter-spacing:0.02em;}
+  .hero{padding:56px 24px 40px;text-align:center;border-bottom:1px solid rgba(243,236,223,0.15);background:radial-gradient(ellipse at top,rgba(228,169,74,0.10),transparent 60%),var(--teal-deep);}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fog);margin-bottom:14px;}
+  .hero h1{font-size:clamp(40px,9vw,68px);line-height:0.92;margin:0 0 6px;}
+  .hero .sub{font-size:15px;color:var(--fog);margin:0 0 32px;font-style:italic;}
+  .streak{max-width:520px;margin:0 auto;}
+  .streak-row{display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+  .boy-icon{width:34px;height:34px;border-radius:50%;background:var(--cedar);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:14px;opacity:0.9;}
+  .boy-icon.query{background:transparent;border:2px dashed var(--amber);color:var(--amber);font-weight:600;}
+  .streak-caption{font-size:13px;color:var(--fog);line-height:1.5;}
+  .streak-caption b{color:var(--amber);}
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px;}
+  section{padding:44px 0;border-bottom:1px solid rgba(243,236,223,0.12);}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.03em;color:var(--amber);margin:0 0 4px;}
+  .section-note{font-size:13.5px;color:var(--fog);margin:0 0 24px;max-width:56ch;}
+  .odds-card{background:var(--teal-mid);border:1px solid rgba(243,236,223,0.1);border-radius:2px;padding:18px 18px 14px;margin-bottom:16px;}
+  .odds-card h3{font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:var(--fog);margin:0 0 12px;}
+  .odds-line{display:flex;align-items:center;gap:12px;margin-bottom:8px;font-size:14px;}
+  .odds-label{flex:0 0 150px;}
+  .odds-bar-track{flex:1;height:8px;background:rgba(243,236,223,0.1);border-radius:4px;overflow:hidden;}
+  .odds-bar-fill{height:100%;background:var(--amber);border-radius:4px;}
+  .odds-pct{flex:0 0 46px;text-align:right;font-family:'IBM Plex Mono',monospace;color:var(--amber);font-size:13px;}
+  .slip{background:var(--paper);color:var(--ink);border-radius:3px;padding:24px;position:relative;}
+  .slip::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:repeating-linear-gradient(90deg,var(--teal-deep) 0 10px,transparent 10px 20px);}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--cedar);margin-bottom:6px;}
+  .field input,.field select{width:100%;padding:10px 12px;border:1px solid rgba(21,34,32,0.25);border-radius:2px;font-family:'Source Serif 4',serif;font-size:16px;background:#fff;color:var(--ink);}
+  .pick-row{display:grid;grid-template-columns:1fr 90px;gap:10px;align-items:end;margin-bottom:16px;}
+  .pick-row .field{margin-bottom:0;}
+  .submit-btn{width:100%;padding:14px;background:var(--cedar);color:var(--paper);border:none;border-radius:2px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.05em;cursor:pointer;margin-top:8px;}
+  .submit-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .status-msg{margin-top:10px;font-size:13px;font-family:'IBM Plex Mono',monospace;}
+  .status-msg.ok{color:var(--good);} .status-msg.err{color:var(--cedar);}
+  .closed-banner{display:none;background:var(--cedar);color:var(--paper);padding:12px 16px;border-radius:2px;margin-bottom:16px;font-family:'IBM Plex Mono',monospace;font-size:13px;}
+  .combo-card{background:rgba(154,78,60,0.07);border:1px solid rgba(154,78,60,0.35);border-radius:3px;padding:20px;margin-top:8px;}
+  .combo-card h3{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--cedar);margin:0 0 6px;}
+  .combo-note{font-size:12.5px;color:#4a5753;margin:0 0 16px;line-height:1.6;}
+  .combo-legs{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+  .combo-leg{display:flex;align-items:center;gap:10px;font-size:14px;}
+  .combo-leg input[type=checkbox]{width:18px;height:18px;}
+  .leg-val{font-family:'IBM Plex Mono',monospace;color:var(--cedar);font-size:12px;}
+  .ticket{background:var(--teal-mid);border:1px dashed rgba(243,236,223,0.25);border-radius:2px;padding:16px 18px;margin-bottom:12px;}
+  .ticket-name{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--amber);margin-bottom:8px;}
+  .ticket-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:13px;}
+  .ticket-grid div span{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--fog);letter-spacing:0.06em;}
+  .ticket-combo{margin-top:10px;padding-top:10px;border-top:1px solid rgba(243,236,223,0.15);font-size:12.5px;color:var(--amber);}
+  .ticket-total{margin-top:10px;padding-top:10px;border-top:1px solid rgba(243,236,223,0.15);font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--fog);}
+  .empty-state{color:var(--fog);font-size:14px;font-style:italic;text-align:center;padding:24px 0;}
+  .pot-summary{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+  .pot-chip{background:var(--teal-mid);border:1px solid rgba(243,236,223,0.15);border-radius:2px;padding:10px 14px;flex:1;min-width:110px;}
+  .pot-chip span{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;text-transform:uppercase;color:var(--fog);letter-spacing:0.06em;margin-bottom:4px;}
+  .pot-chip b{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--amber);font-weight:400;}
+  .results-card{background:var(--teal-mid);border-radius:2px;padding:20px;margin-bottom:16px;}
+  .results-card h4{font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:var(--fog);margin:0 0 12px;font-weight:500;}
+  .payout-row{display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:6px 0;border-bottom:1px solid rgba(243,236,223,0.08);}
+  .payout-row.win{color:var(--amber);font-weight:600;}
+  .payout-row b{font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
+  .rules{font-size:13.5px;color:var(--fog);line-height:1.7;} .rules b{color:var(--paper);}
+  footer{text-align:center;padding:28px 20px 48px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(169,190,196,0.5);letter-spacing:0.05em;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Vancouver, BC · Due November</div>
+  <h1 class="display">THE POOL</h1>
+  <p class="sub">First baby. First chance to break the streak.</p>
+  <div class="streak">
+    <div class="streak-row" id="streakRow"></div>
+    <p class="streak-caption">Five uncles on one side, two on the other. <b>Seven boys deep</b>, and this is the first baby of the next generation. Boy number eight, or the one who breaks it?</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <h2 class="section-title">Opening Odds</h2>
+    <p class="section-note">Set from real birth statistics, not vibes. The streak is flavour, not data. Bets are recorded here; the organiser works out and settles payouts offline. All amounts CAD.</p>
+
+    <div class="odds-card"><h3>Gender</h3>
+      <div class="odds-line"><div class="odds-label">Boy</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:51%"></div></div><div class="odds-pct">51%</div></div>
+      <div class="odds-line"><div class="odds-label">Girl</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:49%"></div></div><div class="odds-pct">49%</div></div>
+    </div>
+    <div class="odds-card"><h3>Arrival vs. due date (first babies run late)</h3>
+      <div class="odds-line"><div class="odds-label">Early (&gt;1 wk before)</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:15%"></div></div><div class="odds-pct">15%</div></div>
+      <div class="odds-line"><div class="odds-label">On time (±1 wk)</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:60%"></div></div><div class="odds-pct">60%</div></div>
+      <div class="odds-line"><div class="odds-label">Late (&gt;1 wk after)</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:25%"></div></div><div class="odds-pct">25%</div></div>
+    </div>
+    <div class="odds-card"><h3>Birth weight (avg. ~7.5 lb)</h3>
+      <div class="odds-line"><div class="odds-label">Under 6.6 lb</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:20%"></div></div><div class="odds-pct">20%</div></div>
+      <div class="odds-line"><div class="odds-label">6.6–7.7 lb</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:35%"></div></div><div class="odds-pct">35%</div></div>
+      <div class="odds-line"><div class="odds-label">7.7–8.8 lb</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:30%"></div></div><div class="odds-pct">30%</div></div>
+      <div class="odds-line"><div class="odds-label">Over 8.8 lb</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:15%"></div></div><div class="odds-pct">15%</div></div>
+    </div>
+    <div class="odds-card"><h3>Time of day (Vancouver time)</h3>
+      <div class="odds-line"><div class="odds-label">Night 12–6am</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:28%"></div></div><div class="odds-pct">28%</div></div>
+      <div class="odds-line"><div class="odds-label">Morning 6am–12pm</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:24%"></div></div><div class="odds-pct">24%</div></div>
+      <div class="odds-line"><div class="odds-label">Afternoon 12–6pm</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:22%"></div></div><div class="odds-pct">22%</div></div>
+      <div class="odds-line"><div class="odds-label">Evening 6pm–12am</div><div class="odds-bar-track"><div class="odds-bar-fill" style="width:26%"></div></div><div class="odds-pct">26%</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Place a Bet</h2>
+    <p class="section-note">Add a stake next to any pick you want money on. Leave it at $0 for bragging rights only. If you submit twice, the organiser will use your most recent slip.</p>
+    <div class="closed-banner" id="closedBanner">Betting is closed. Good luck to everyone.</div>
+    <div class="slip">
+      <div class="field"><label>Your name</label><input type="text" id="fName" maxlength="40" placeholder="e.g. Uncle Jamie"></div>
+
+      <div class="pick-row">
+        <div class="field"><label>Gender guess</label><select id="fGender"><option value="Boy">Boy</option><option value="Girl">Girl</option></select></div>
+        <div class="field"><label>Stake $</label><input type="number" min="0" max="500" step="1" id="sGender" value="0"></div>
+      </div>
+      <div class="pick-row">
+        <div class="field"><label>Exact date guess (Vancouver)</label><input type="date" id="fDate"></div>
+        <div class="field"><label>Stake $</label><input type="number" min="0" max="500" step="1" id="sDate" value="0"></div>
+      </div>
+      <div class="pick-row">
+        <div class="field"><label>Weight guess (lb, e.g. 7.5)</label><input type="text" inputmode="decimal" id="fWeight" placeholder="7.5"></div>
+        <div class="field"><label>Stake $</label><input type="number" min="0" max="500" step="1" id="sWeight" value="0"></div>
+      </div>
+      <div class="pick-row">
+        <div class="field"><label>Time of day</label><select id="fTime"><option value="Night">Night (12–6am)</option><option value="Morning">Morning (6am–12pm)</option><option value="Afternoon">Afternoon (12–6pm)</option><option value="Evening">Evening (6pm–12am)</option></select></div>
+        <div class="field"><label>Stake $</label><input type="number" min="0" max="500" step="1" id="sTime" value="0"></div>
+      </div>
+      <div class="pick-row">
+        <div class="field"><label>Hair at birth</label><select id="fHair"><option value="Bald">Bald / peach fuzz</option><option value="Some">Some hair</option><option value="Full">Full head</option></select></div>
+        <div class="field"><label>Stake $</label><input type="number" min="0" max="500" step="1" id="sHair" value="0"></div>
+      </div>
+
+      <div class="combo-card">
+        <h3>Combo Bet (optional)</h3>
+        <p class="combo-note">Tick 2 or more picks (gender, time of day, hair) to stack them into one combo bet. Combo bets are settled by the organiser.</p>
+        <div class="combo-legs">
+          <label class="combo-leg"><input type="checkbox" id="cGender"> Gender <span class="leg-val" id="cGenderVal"></span></label>
+          <label class="combo-leg"><input type="checkbox" id="cTime"> Time of day <span class="leg-val" id="cTimeVal"></span></label>
+          <label class="combo-leg"><input type="checkbox" id="cHair"> Hair <span class="leg-val" id="cHairVal"></span></label>
+        </div>
+        <div class="field"><label>Combo stake $</label><input type="number" min="0" max="500" step="1" id="sCombo" value="0"></div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" style="margin-top:20px;">SUBMIT SLIP</button>
+      <div class="status-msg" id="statusMsg"></div>
+    </div>
+    <div id="receipt" style="margin-top:20px;"></div>
+  </section>
+
+
+
+  <section style="border-bottom:none;">
+    <h2 class="section-title">Rules</h2>
+    <div class="rules">
+      <p><b>Closest-guess bets</b> (date, weight): nearest to the actual result wins.</p>
+      <p><b>Everything else</b> (gender, time, hair, combos) is match-or-miss.</p>
+      <p><b>Betting closes</b> when the organiser closes it, before labour starts. Dates and times are Vancouver time.</p>
+      <p><b>Payments and payouts</b> are handled offline by the organiser. All amounts CAD.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>FOR FAMILY EYES ONLY · BETS RECORDED BY THE ORGANISER</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
